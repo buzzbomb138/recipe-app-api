@@ -11,7 +11,7 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('must include an email address')
 
-        user = self.model(email=self.normalize_email(email=email), **kwargs)
+        user = self.model(email=self.normalize_email(email), **kwargs)
         user.set_password(password)
         user.save(using=self._db)
 
@@ -33,7 +33,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
 
     objects = UserManager()
 
