@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.test import Client
 
 
 class AdminSiteTests(TestCase):
@@ -33,7 +34,7 @@ class AdminSiteTests(TestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_create_user_page(self):
-        """create user page works"""
+        """Test that the create user page works"""
         url = reverse('admin:core_user_add')
         resp = self.client.get(url)
 
