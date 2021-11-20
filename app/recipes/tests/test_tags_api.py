@@ -3,11 +3,11 @@ from django.urls import reverse
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
-from core.models import Tag
-from recipes.serializers import TagSerializer
+from core.models import Tags
+from recipes.serializers import TagsSerializer
 
 
-TAGS_URL = reverse('recipes:tag-list')
+TAGS_URL = reverse('recipes:tags-list')
 
 
 class PublicTagsAPITest(TestCase):
@@ -35,11 +35,11 @@ class PrivateTagsAPITests(TestCase):
 
     def test_retrieve_tags(self):
         """test retrieving tags"""
-        Tag.objects.create(user=self.user, name='vegan')
-        Tag.objects.create(user=self.user, name='dessert')
+        Tags.objects.create(user=self.user, name='vegan')
+        Tags.objects.create(user=self.user, name='dessert')
         resp = self.client.get(TAGS_URL)
-        tags = Tag.objects.all().order_by('-name')
-        serializer = TagSerializer(tags, many=True)
+        tags = Tags.objects.all().order_by('-name')
+        serializer = TagsSerializer(tags, many=True)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data, serializer.data)
 
@@ -49,8 +49,8 @@ class PrivateTagsAPITests(TestCase):
             'other@londondappdev.com',
             'pass123'
         )
-        Tag.objects.create(user=user2, name='fruity')
-        tag = Tag.objects.create(user=self.user, name='salty')
+        Tags.objects.create(user=user2, name='fruity')
+        tag = Tags.objects.create(user=self.user, name='salty')
 
         resp = self.client.get(TAGS_URL)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -62,7 +62,7 @@ class PrivateTagsAPITests(TestCase):
         payload = {'name': 'test'}
         self.client.post(TAGS_URL, payload)
 
-        exists = Tag.objects.filter(
+        exists = Tags.objects.filter(
             user=self.user,
             name=payload['name']
         ).exists()
